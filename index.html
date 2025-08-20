@@ -11,6 +11,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
 </head>
 
 <body>
@@ -37,7 +38,8 @@
     </div>
   </div>
 
-  <section class="swiper-container loading">
+  <!-- Swiper video slides -->
+  <section class="swiper-container swiper-video loading">
     <div class="swiper-wrapper">
 
       <!-- Slide 1 -->
@@ -47,11 +49,11 @@
             data-src="https://www.youtube.com/embed/sB-0v-rKL1g?si=AWHyhN7KbWuWnwnG"></iframe>
 
           <button class="videoPoster js-videoPoster"
-            style="background-image:url(https://img.youtube.com/vi/gck3vkIShOw/maxresdefault.jpg);">
+            style="background-image:url('https://img.youtube.com/vi/sB-0v-rKL1g/maxresdefault.jpg');">
             ▶️
           </button>
         </div>
-        <div class="slide-caption">luke james - who you are [Official Audio]</div>
+        <div class="slide-caption">Tuần 11</div>
       </div>
 
       <!-- Slide 2 -->
@@ -61,32 +63,67 @@
             data-src="https://www.youtube.com/embed/2BJBFr4-JpA?enablejsapi=1&autoplay=1&modestbranding=1&rel=0&playlist=2BJBFr4-JpA&loop=1&mute=1"></iframe>
 
           <button class="videoPoster js-videoPoster"
-            style="background-image:url(https://img.youtube.com/vi/2BJBFr4-JpA/sddefault.jpg);">
+            style="background-image:url('https://img.youtube.com/vi/sB-0v-rKL1g/maxresdefault.jpg');">
             ▶️
           </button>
         </div>
-        <div class="slide-caption">luke james - shine on [Official Audio]</div>
+        <div class="slide-caption">Tuần 12</div>
       </div>
 
-<!-- Slide 3 -->
+      <!-- Slide 3 -->
       <div class="swiper-slide">
         <div class="videoWrapper js-videoWrapper">
           <iframe class="videoIframe js-videoIframe" src="" frameborder="0" allow="autoplay; fullscreen" allowfullscreen
             data-src="https://www.youtube.com/embed/2BJBFr4-JpA?enablejsapi=1&autoplay=1&modestbranding=1&rel=0&playlist=2BJBFr4-JpA&loop=1&mute=1"></iframe>
 
           <button class="videoPoster js-videoPoster"
-            style="background-image:url(https://img.youtube.com/vi/2BJBFr4-JpA/sddefault.jpg);">
+            style="background-image:url('https://img.youtube.com/vi/sB-0v-rKL1g/maxresdefault.jpg');">
             ▶️
           </button>
         </div>
-        <div class="slide-caption">luke james - shine on [Official Audio]</div>
+        <div class="slide-caption">Tuần 13</div>
       </div>
-
 
     </div>
 
-    <div class="swiper-button-prev swiper-button-white"></div>
-    <div class="swiper-button-next swiper-button-white"></div>
+    <div class="swiper-button-prev swiper-button-prev-video"></div>
+    <div class="swiper-button-next swiper-button-next-video"></div>
+  </section>
+
+  <!-- Section chứa heading và swiper ảnh -->
+  <section>
+    <center>
+      <!-- <h1 style="font-size: 36px;">Heading Should be Here</h1> -->
+      <p style="font-size: 18px;font-weight: 300">Ảnh </p>
+    </center>
+
+    <div class="swiper-container swiper-full-mobile">
+      <div class="swiper-wrapper">
+
+        <div class="swiper-slide">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSs3f9jcVcthZUKCpBP7frEncOof49apvPh-g&s" alt="">
+        </div>
+        <div class="swiper-slide">
+          <img src="https://img.lovepik.com/bg/20240112/Takumei-Adorable-Little-Cutie-Clouds-Animation_2761633_wh860.jpg!/fw/860" alt="">
+        </div>
+        <div class="swiper-slide">
+          <img src="https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/482519oQy/anh-mo-ta.png" alt="">
+        </div>
+        <div class="swiper-slide">
+          <img src="https://i.pinimg.com/564x/c6/dc/8c/c6dc8c2764bf1a42b11e97eb095a9593.jpg" alt="">
+        </div>
+        <div class="swiper-slide">
+          <img src="https://i.pinimg.com/736x/e0/4a/6e/e04a6eb9ab2e40e2cbc4f94fa1ab748b.jpg" alt="">
+        </div>
+
+      </div>
+
+      <!-- Add Pagination -->
+      <div class="swiper-pagination swiper-pagination-images"></div>
+      <!-- Add Arrows -->
+      <div class="swiper-button-next swiper-button-next-images"></div>
+      <div class="swiper-button-prev swiper-button-prev-images"></div>
+    </div>
   </section>
 
   <script src="script.js"></script>

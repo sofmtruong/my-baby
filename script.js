@@ -1,8 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
   initFireWorks();
   initCountDown();
-  initSwiper();
+  initSwiperVideo();
   initVideoEvents();
+  initSwiperImages();
 });
 
 function initFireWorks() {
@@ -18,9 +19,9 @@ function initFireWorks() {
       acceleration: 1.05,
       friction: 0.97,
       gravity: 3.5,
-      particles: 50,         // ít hạt hơn
-      traceLength: 2,        // ngắn hơn
-      explosion: 30,         // vụ nổ nhỏ hơn
+      particles: 50,
+      traceLength: 1,
+      explosion: 30,
       autoresize: true
     });
     fireworks.start();
@@ -28,7 +29,7 @@ function initFireWorks() {
 }
 
 function initCountDown() {
-  const countdown = setInterval(() => {
+  setInterval(() => {
     const targetDate = new Date("2026-02-15T23:59:59");
     const diff = countDownDate(targetDate);
 
@@ -55,8 +56,8 @@ function countDownDate(date_future) {
   return { days, hours, minutes, seconds };
 }
 
-function initSwiper() {
-  const sliderSelector = ".swiper-container";
+function initSwiperVideo() {
+  const sliderSelector = ".swiper-container.swiper-video";
   const options = {
     init: false,
     loop: true,
@@ -74,8 +75,8 @@ function initSwiper() {
     grabCursor: true,
     parallax: true,
     navigation: {
-      nextEl: ".swiper-button-next",
-      prevEl: ".swiper-button-prev"
+      nextEl: ".swiper-button-next-video",
+      prevEl: ".swiper-button-prev-video"
     },
     keyboard: {
       enabled: true,
@@ -101,6 +102,49 @@ function initSwiper() {
   mySwiper.init();
 }
 
+function initSwiperImages() {
+  const swiperMobile = new Swiper('.swiper-container.swiper-full-mobile', {
+    slidesPerView: 'auto',  
+    spaceBetween: 0,
+    slideToClickedSlide: true,
+    centeredSlides: true,
+    pagination: {
+      el: '.swiper-pagination-images',
+      clickable: true,
+    },
+    effect: "coverflow",
+    grabCursor: true,
+    coverflowEffect: {
+      rotate: -10,
+      stretch: 10,
+      depth: 100,
+      modifier: 1,
+      slideShadows: true,
+    },
+    loop: true,
+    keyboard: {
+      enabled: true,
+      onlyInViewport: true,
+    },
+    navigation: {
+      nextEl: '.swiper-button-next-images',
+      prevEl: '.swiper-button-prev-images',
+    },
+    breakpoints: {
+      640: {
+        freemode: true,
+        slidesPerView: 3,
+        spaceBetween: 20,
+      },
+      320: {
+        freemode: true,
+        slidesPerView: 3,
+        spaceBetween: 20,
+      }
+    }
+  });
+}
+
 function initVideoEvents() {
   $(document).on("click", ".js-videoPoster", function (ev) {
     ev.preventDefault();
@@ -119,12 +163,14 @@ function videoPlay($wrapper) {
 }
 
 function videoStop($wrapper) {
+  let $iframe, $wrapperEl;
   if (!$wrapper) {
-    $wrapper = $(".js-videoWrapper");
+    $wrapperEl = $(".js-videoWrapper");
     $iframe = $(".js-videoIframe");
   } else {
+    $wrapperEl = $wrapper;
     $iframe = $wrapper.find(".js-videoIframe");
   }
-  $wrapper.removeClass("videoWrapperActive");
+  $wrapperEl.removeClass("videoWrapperActive");
   $iframe.attr("src", "");
 }
