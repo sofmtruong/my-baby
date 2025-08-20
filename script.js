@@ -1,30 +1,31 @@
-
-initFireWorks();
-initCountDown();
+document.addEventListener("DOMContentLoaded", function () {
+  initFireWorks();
+  initCountDown();
+  initSwiper();
+  initVideoEvents();
+});
 
 function initFireWorks() {
   const containers = document.querySelectorAll('.fireworks-container');
   containers.forEach((container, index) => {
     index += 1;
-    // Dùng Fireworks.default vì global export là default
     const fireworks = new Fireworks.default(container, {
       hue: { min: 0, max: 360 },
-      delay: { min: 50 / index, max: 100 / index },
+      delay: { min: 100, max: 800 },
       brightness: { min: 80, max: 100 },
       rocketsPoint: { min: 50, max: 50 },
       opacity: 1,
       acceleration: 1.05,
       friction: 0.97,
-      gravity: 2,
-      particles: 200 / index,
-      traceLength: 4 / index,
-      explosion: 40 / index,
+      gravity: 3.5,
+      particles: 50,         // ít hạt hơn
+      traceLength: 2,        // ngắn hơn
+      explosion: 30,         // vụ nổ nhỏ hơn
       autoresize: true
     });
     fireworks.start();
   });
 }
-
 
 function initCountDown() {
   const countdown = setInterval(() => {
@@ -32,12 +33,11 @@ function initCountDown() {
     const diff = countDownDate(targetDate);
 
     Object.keys(diff).forEach(key => {
-      document.querySelector("." + key).textContent = diff[key];
+      const el = document.querySelector("." + key);
+      if (el) el.textContent = diff[key];
     });
 
-    // Nếu bạn vẫn muốn hiển thị năm 2025:
     document.querySelector('.countdown-date').textContent = "15-02-2026";
-
   }, 1000);
 }
 
@@ -55,178 +55,76 @@ function countDownDate(date_future) {
   return { days, hours, minutes, seconds };
 }
 
-(function ($) {
-    $.fn.sliderVideo = function (options) {
-        options = $.extend({
-            scrollerSelector: '.slider-video-scroll',
-            itemSelector: '.slider-video-item',
-            aspectSelect: '.slider-video-aspect',
-            navLeftSelector: '.slider-video-left',
-            navRightSelecto: '.slider-video-right',
-            scrollTime: 500,
-            animationTime: 300,
-            visibleItems: 2,
-            itemsGap: 10,
-            aspectRation: 0.625
-        }, options);
+function initSwiper() {
+  const sliderSelector = ".swiper-container";
+  const options = {
+    init: false,
+    loop: true,
+    speed: 800,
+    slidesPerView: 3,
+    centeredSlides: true,
+    effect: "coverflow",
+    coverflowEffect: {
+      rotate: 50,
+      stretch: 0,
+      depth: 100,
+      modifier: 1,
+      slideShadows: true
+    },
+    grabCursor: true,
+    parallax: true,
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev"
+    },
+    keyboard: {
+      enabled: true,
+      onlyInViewport: false
+    },
+    breakpoints: {
+      1023: {
+        slidesPerView: 1,
+        spaceBetween: 0
+      }
+    },
+    on: {
+      imagesReady: function () {
+        this.el.classList.remove("loading");
+      },
+      slideChange: function () {
+        videoStop();
+      }
+    }
+  };
 
-        var $slider = $(this);
-        var $scroller = $slider.find(options.scrollerSelector);
-        var $aspect = $slider.find(options.aspectSelect);
-        var $items = $slider.find(options.itemSelector);
-        var $navLeft = $slider.find(options.navLeftSelector);
-        var $navRight = $slider.find(options.navRightSelecto);
-        $items.bind('click', onItemClick);
-        $navLeft.bind('click', onNavLeftClick);
-        $navRight.bind('click', onNavRightClick);
-        $slider.bind('scrollToIndex', function (event, index) {
-            scrollToIndex(index);
-        });
+  const mySwiper = new Swiper(sliderSelector, options);
+  mySwiper.init();
+}
 
-        initializeSize();
-        initializeOrigin();
-        initializeNavigation();
+function initVideoEvents() {
+  $(document).on("click", ".js-videoPoster", function (ev) {
+    ev.preventDefault();
+    videoStop();
+    const $poster = $(this);
+    const $wrapper = $poster.closest(".js-videoWrapper");
+    videoPlay($wrapper);
+  });
+}
 
-        function initializeSize() {
-            $aspect.height($aspect.width() * options.aspectRation);
-            $scroller.width((50 * $items.length) + '%');
+function videoPlay($wrapper) {
+  const $iframe = $wrapper.find(".js-videoIframe");
+  const src = $iframe.data("src");
+  $wrapper.addClass("videoWrapperActive");
+  $iframe.attr("src", src);
+}
 
-            var itemWidth = $aspect.width() / options.visibleItems;
-            var itemHeight = itemWidth * options.aspectRation;
-            var positionTop = ($aspect.height() - itemHeight) / 2;
-            $items.each(function (i) {
-                $(this).css({
-                    top: positionTop,
-                    left: i * (itemWidth + options.itemsGap),
-                    width: itemWidth - options.itemsGap + 'px',
-                    height: itemHeight + 'px'
-                })
-            });
-        }
-
-        function initializeOrigin() {
-            var aspectScrollLeft = $aspect.scrollLeft()
-            $items.each(function (i) {
-                var $item = $(this);
-                if ($item.position().left > aspectScrollLeft) {
-                    $item.css({
-                        'transform-origin': '100% 50%'
-                    });
-                } else {
-                    $item.css({
-                        'transform-origin': '0 50%'
-                    });
-                }
-            })
-        }
-
-        function initializeNavigation() {
-            var visibleItems = getVisibleItems();
-
-            $navLeft.toggle(visibleItems.first().prev().length > 0);
-            $navRight.toggle(visibleItems.last().next().length > 0);
-        }
-
-        function onItemClick() {
-            var $item = $(this);
-
-            if ($item.is(".active")) {
-                $item.removeClass('active');
-                toggleVideo($item, false);
-                initializeSize();
-
-                $item.addClass('active-out');
-                setTimeout(function () {
-                    $item.removeClass('active-out');
-                }, options.animationTime)
-            }
-            else {
-                $item.css({
-                    width: $aspect.width(),
-                    height: $aspect.height(),
-                    left: $aspect.scrollLeft(),
-                    top: 0
-                });
-                $item.addClass('active');
-                setTimeout(function () {
-                    toggleVideo($item, true);
-                }, 300)
-            }
-        }
-
-        function onNavRightClick() {
-            scrollTo(1);
-        }
-
-        function onNavLeftClick() {
-            scrollTo(-1);
-        }
-
-
-        function toggleVideo($item, status) {
-            $item.find('.slider-video-pic').toggle(!status);
-            $item.find('.slider-video-play').toggle(status);
-            var frame = $item.find('iframe')[0];
-            frame.contentWindow.postMessage('{"event":"command","func":"' + (status ? 'playVideo' : 'pauseVideo') + '","args":""}', '*')
-        }
-
-        function scrollTo(direction) {
-
-            if ($items.is('.active')) {
-                var $active = $('.slider-video-item').filter('.active');
-                var $next = direction > 0 ? $active.next() : $active.prev();
-                if ($next.length) {
-                    scrollToIndex($next.index());
-                    $active.trigger('click');
-                    setTimeout(function () {
-                        $next.trigger('click');
-                        initializeNavigation();
-                    }, options.scrollTime)
-                }
-            } else {
-                var visibleItems = getVisibleItems();
-
-                if (direction > 0) {
-                    scrollToIndex(visibleItems.last().next().index());
-                } else {
-                    scrollToIndex(visibleItems.first().prev().index());
-                }
-            }
-        }
-
-        function scrollToIndex(index) {
-            var $item = $items.eq(index);
-            if ($item.length) {
-                var itemWidth = $aspect.width() / options.visibleItems;
-
-                var itemLeft = $item.position().left;
-                var targetPosition = null;
-
-                if (itemLeft > $aspect.scrollLeft() + $aspect.width()) {
-                    targetPosition = itemLeft - itemWidth - options.itemsGap;
-                } else if (itemLeft < $aspect.scrollLeft()) {
-                    targetPosition = itemLeft;
-                }
-
-                if (targetPosition != null) {
-                    $aspect.animate({ scrollLeft: targetPosition + 'px' }, options.scrollTime, function () {
-                        initializeOrigin();
-                        initializeNavigation();
-                    });
-                }
-            }
-        }
-
-        function getVisibleItems() {
-            return $items.filter(function (i) {
-                var posLeft = $(this).position().left;
-                return posLeft >= $aspect.scrollLeft() && posLeft < $aspect.scrollLeft() + $aspect.width();
-            });
-        }
-
-    };
-})(jQuery);
-
-$(function() {
-  $('.slider-video').sliderVideo();
-})
+function videoStop($wrapper) {
+  if (!$wrapper) {
+    $wrapper = $(".js-videoWrapper");
+    $iframe = $(".js-videoIframe");
+  } else {
+    $iframe = $wrapper.find(".js-videoIframe");
+  }
+  $wrapper.removeClass("videoWrapperActive");
+  $iframe.attr("src", "");
+}
