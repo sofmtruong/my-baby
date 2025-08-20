@@ -224,8 +224,7 @@ body {
   margin-bottom: 1.5rem;
 }
 
-.swiper-full-mobile .swiper-slide {
-  width: 250px;
-  /* 👈 hoặc 300px tùy ý */
-  height: auto;
+html, body {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
 }
