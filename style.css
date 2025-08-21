@@ -22,7 +22,7 @@ body {
   font-size: 4.5vmin;
   color: white;
   font-family: "Londrina Solid", cursive;
-  max-width: 100vh !important;
+  max-height: 100vh !important;
 }
 
 .fireworks-container {
